@@ -4,22 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ascii Art Web</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
 </head>
-<body class="m-4">
-    <h1 class="text-2xl text-sky-400">Ascii Art</h1>
-    <form action="/" method="post">
-        <input class="border" type="text" name="text" value="{{.Text}}" placeholder="Enter text" required />
-        <select name="banner" class="border">
-            <option value="all" {{if eq .Banner "all"}}selected{{end}}>All</option>
-            <option value="standard" {{if eq .Banner "standard"}}selected{{end}}>Standard</option>
-            <option value="shadow" {{if eq .Banner "shadow"}}selected{{end}}>Shadow</option>
-            <option value="thinkertoy" {{if eq .Banner "thinkertoy"}}selected{{end}}>Thinkertoy</option>
-        </select>
-        <button type="submit" class="bg-blue-500 text-white px-4 py-2">Generate</button>
-    </form>
-    <pre>
-        <br/>
+<body>
+    <center>
+        <h1>Ascii Art</h1>
+        <form action="/ascii-art" method="post">
+            <textarea name="text" value="{{.Text}}" placeholder="Enter text" required></textarea>
+            <br/>
+            <select name="banner" class="border">
+                <option value="all" {{if eq .Banner "all"}}selected{{end}}>All</option>
+                <option value="standard" {{if eq .Banner "standard"}}selected{{end}}>Standard</option>
+                <option value="shadow" {{if eq .Banner "shadow"}}selected{{end}}>Shadow</option>
+                <option value="thinkertoy" {{if eq .Banner "thinkertoy"}}selected{{end}}>Thinkertoy</option>
+            </select>
+            <button type="submit">Generate</button>
+        </form>
+    </center>
+    <pre style="margin-left: 20px;">
         {{.AsciiArt}}
     </pre>
 </body>

@@ -18,8 +18,8 @@ func main() {
     http.HandleFunc("/", htmlHandler)
 
     // Start the web server
-    log.Println("Starting server on port 8080")
-    err := http.ListenAndServe(":8080", nil)
+    log.Println("Starting server on http://localhost:3000/")
+    err := http.ListenAndServe(":3000", nil)
     if err != nil {
         log.Fatal("Error starting the server:", err)
     }
@@ -41,7 +41,11 @@ func AsciiArtMaker(text string, banner string) (string, []error) {
 }
 
 func htmlHandler(w http.ResponseWriter, r *http.Request) {
-    if r.Method == http.MethodPost {
+    if r.Method == "POST" {
+        if r.URL.Path != "/ascii-art" {
+            http.Error(w, "400 - Bad Request", 400)
+            return
+        }
         text := r.FormValue("text")
         banner := r.FormValue("banner")
         if len(text) == 0 || len(banner) == 0 {
@@ -65,10 +69,23 @@ func htmlHandler(w http.ResponseWriter, r *http.Request) {
             Banner:   banner,
             AsciiArt: asciiArt,
         }
-
-        w.Header().Set("Content-Type", "text/html")
         tmpl.Execute(w, data)
-    } else {
-        http.ServeFile(w, r, "template.html")
+    } 
+    if r.Method == "GET" {
+        if r.URL.Path != "/" {
+            http.Error(w, "400 - Bad Request", 400)
+            return
+        }
+        //http.ServeFile(w, r, "template.html")
+        tmpl, err := template.ParseFiles("template.html")
+        if err != nil {
+            http.Error(w, "404 - Not Found", 404)
+            return
+        }
+        data := Data{
+            Text:     "",
+            AsciiArt: "",
+        }
+        tmpl.ExecuteTemplate(w, "template.html", data)
     }
 }

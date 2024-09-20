@@ -11,13 +11,20 @@ func WriteResult(str string,asciiChars map[int]string) ([]string, error) {
 	inWord := false
 	letterCount := 0
 	for i := 0; i < len(str); i++ {
+
+		// Handle carriage return
+		if str[i] == 13 {
+			continue
+		}
+		
 		// Handle non ascii char.
-		if str[i] < 32 || str[i] > 126 {
+		if (str[i] < 32 || str[i] > 126) && str[i] != '\n' {
+			fmt.Println(string(str[i]))
 			return result, fmt.Errorf("A none ascii char has been found !!")
 		}
 
 		// Handle \n.
-		if str[i] == '\\' && str[i+1] == 'n' {
+		if str[i] == '\n' {
 			if !inWord {
 				result = append(result, "")
 				lineToWrite++
@@ -26,7 +33,6 @@ func WriteResult(str string,asciiChars map[int]string) ([]string, error) {
 				lineToWrite++
 			}
 			inWord = false
-			i++
 			continue
 		}
 		
