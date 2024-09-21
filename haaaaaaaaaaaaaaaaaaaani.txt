@@ -1,0 +1,6 @@
+Need to Do :
+ - Watch and resume templating vid := "https://www.youtube.com/watch?v=dWchPTi9Vc0"
+ - Css
+ - Watch and resume About Http package - (w and r and all their babies XD)
+ - Make button to Export in multi format(.txt and others)
+ - Add color-palette using rgb values

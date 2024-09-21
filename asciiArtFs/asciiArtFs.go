@@ -10,7 +10,7 @@ func AsciiArtFs(text string, banner string) (string, error) {
 	banner = "asciiArtFs/" + banner + ".txt"
 	standard, err := myfunctions.Read(banner)
 	if err != nil {
-		return "", fmt.Errorf("")
+		return "NotFound", fmt.Errorf("")
 	}
 	asciiChars := myfunctions.BytesToAsciiMap(standard)
 	result, err := myfunctions.WriteResult(text, asciiChars)
