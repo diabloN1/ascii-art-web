@@ -4,3 +4,4 @@ Need to Do :
  - Watch and resume About Http package - (w and r and all their babies XD)
  - Make button to Export in multi format(.txt and others)
  - Add color-palette using rgb values
+ - Bonus : Think about a solution to solve "l\nl" "Hell\nlo" case while colorring in ascii-art-color.
