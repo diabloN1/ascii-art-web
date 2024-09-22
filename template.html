@@ -21,8 +21,8 @@
             <button type="submit">Generate</button>
         </form>
     </center>
-    <pre style="margin-left: 20px;">
-        {{.AsciiArt}}
-    </pre>
+    <div style="margin-left: 20px;">
+        {{if .AsciiArt}}<pre>{{.AsciiArt}}</pre>{{else}} Result will be displayed here... {{end}}
+    </div>
 </body>
 </html>

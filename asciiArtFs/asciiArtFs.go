@@ -1,9 +1,9 @@
 package asciiArtFs
 
 import (
+	"asciiArtWeb/asciiArtFs/myFunctions"
 	"fmt"
 	"log"
-	"asciiArtWeb/asciiArtFs/myFunctions"
 )
 
 func AsciiArtFs(text string, banner string) (string, error) {
@@ -25,7 +25,28 @@ func AsciiArtFs(text string, banner string) (string, error) {
 func String(result []string) string {
 	str := ""
 	for _, v := range result {
-		str += v + "\n"
+		v = replaceSpaces(v)
+		str += v + "<br>"
 	}
-	return "\n" + str
+	return str
+}
+
+func replaceSpaces(str string) string {
+	res := ""
+	for i := range str {
+		if OnlySpaces(str[i:]) {
+			break
+		}
+		res += string(str[i])
+	}
+	return res
+}
+
+func OnlySpaces(str string) bool {
+	for _, v := range str {
+		if v != ' ' {
+			return false
+		}
+	}
+	return true
 }
