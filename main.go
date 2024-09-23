@@ -78,8 +78,8 @@ func Post(w http.ResponseWriter, r *http.Request) {
 
 	err := r.ParseForm()
 	if err != nil {
-		log.Fatal(err)
-		return
+		http.Error(w, "500 - Internal Server Error", 500)
+		log.Fatalln(err)
 	}
 
 	text := r.Form.Get("text")
