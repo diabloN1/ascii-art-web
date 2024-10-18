@@ -54,7 +54,7 @@ func AppHandler(w http.ResponseWriter, r *http.Request) {
 
 func Get(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
-		http.Error(w, "404- Not Found", 404)
+		http.Error(w, "404 - Not Found", 404)
 		return
 	}
 	//http.ServeFile(w, r, "template.html")
@@ -63,11 +63,8 @@ func Get(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "404 - Not Found", 404)
 		return
 	}
-	data := Data{
-		Text:     "",
-		AsciiArt: "",
-	}
-	tmpl.ExecuteTemplate(w, "template.html", data)
+	data := Data{}
+	tmpl.Execute(w, data)
 }
 
 func Post(w http.ResponseWriter, r *http.Request) {
@@ -82,14 +79,15 @@ func Post(w http.ResponseWriter, r *http.Request) {
 		log.Fatalln(err)
 	}
 
-	text := r.Form.Get("text")
-	banner := r.Form.Get("banner")
-	if len(text) == 0 || len(banner) == 0 {
+	data := Data{}
+	data.Text = r.Form.Get("text")
+	data.Banner = r.Form.Get("banner")
+	if len(data.Text) == 0 || len(data.Banner) == 0 {
 		http.Error(w, "400 - Bad Request", http.StatusBadRequest)
 		return
 	}
 
-	asciiArt, errs := AsciiArtMaker(text, banner)
+	asciiArt, errs := AsciiArtMaker(data.Text, data.Banner)
 	tmpl, err := template.ParseFiles("template.html")
 	errs = append(errs, err)
 
@@ -106,6 +104,6 @@ func Post(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	data := Data{ Text: text, Banner: banner, AsciiArt: template.HTML(asciiArt) }
+	data.AsciiArt = template.HTML(asciiArt)
 	tmpl.Execute(w, data)
 }
