@@ -81,8 +81,8 @@ func Post(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := Data{}
-	data.Text = r.Form.Get("text")
-	data.Banner = r.Form.Get("banner")
+	data.Text = r.Form["text"][0]
+	data.Banner = r.Form["banner"][0]
 	if len(data.Text) == 0 || len(data.Banner) == 0 {
 		http.Error(w, "400 - Bad Request", http.StatusBadRequest)
 		return
