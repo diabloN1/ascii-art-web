@@ -1,11 +1,12 @@
 package main
 
 import (
-	web "asciiArtWeb/asciiArtFs"
 	"fmt"
 	"html/template"
 	"log"
 	"net/http"
+
+	web "asciiArtWeb/asciiArtFs"
 )
 
 type Data struct {
@@ -20,7 +21,7 @@ func main() {
 
 	// Start the web server
 	log.Println("Starting server on http://localhost:3000/")
-	err := http.ListenAndServe(":3000", nil)
+	err := http.ListenAndServe(":3000", nil) // use default multiplexer
 	if err != nil {
 		log.Fatal("Error starting the server:", err)
 	}
@@ -47,7 +48,7 @@ func AppHandler(w http.ResponseWriter, r *http.Request) {
 		Get(w, r)
 	case "POST":
 		Post(w, r)
-	default :
+	default:
 		http.Error(w, "405 - Method Not Allowed", 405)
 	}
 }
@@ -57,7 +58,7 @@ func Get(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "404 - Not Found", 404)
 		return
 	}
-	//http.ServeFile(w, r, "template.html")
+	// http.ServeFile(w, r, "template.html")
 	tmpl, err := template.ParseFiles("template.html")
 	if err != nil {
 		http.Error(w, "404 - Not Found", 404)
@@ -91,7 +92,7 @@ func Post(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("template.html")
 	errs = append(errs, err)
 
-	//Handing template err and AsciiConverter errs
+	// Handing template err and AsciiConverter errs
 	for i := range errs {
 		if errs[i] != nil {
 			notFound := fmt.Errorf("NotFound")

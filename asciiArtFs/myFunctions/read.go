@@ -15,7 +15,7 @@ func Read(fileName string) ([]byte, error) {
 	}
 
 	defer file.Close()
-	
+
 	//Get file info.
     fileInfo, err := file.Stat()
     if err != nil {
