@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -27,8 +26,8 @@ func main() {
 	}
 }
 
-func AsciiArtMaker(text string, banner string) (string, []error) {
-	errs := []error{}
+func AsciiArtMaker(text string, banner string) (string, []any) {
+	errs := []any{}
 	if banner == "all" {
 		AsciiArt1, err := web.AsciiArtFs(text, "standard")
 		errs = append(errs, err)
@@ -39,7 +38,7 @@ func AsciiArtMaker(text string, banner string) (string, []error) {
 		return AsciiArt1 + AsciiArt2 + AsciiArt3, errs
 	}
 	AsciiArt, err := web.AsciiArtFs(text, banner)
-	return AsciiArt, []error{err}
+	return AsciiArt, []any{err}
 }
 
 func AppHandler(w http.ResponseWriter, r *http.Request) {
@@ -49,11 +48,15 @@ func AppHandler(w http.ResponseWriter, r *http.Request) {
 	case "POST":
 		Post(w, r)
 	default:
-		http.Error(w, "405 - Method Not Allowed", 405)
+		http.Error(w, "400 - Bad request (bad method used)", 400)
 	}
 }
 
 func Get(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path == "/ascii-art" {
+		http.Error(w, "400 - Bad request (bad method used)", 400)
+		return
+	}
 	if r.URL.Path != "/" {
 		http.Error(w, "404 - Not Found", 404)
 		return
@@ -61,7 +64,7 @@ func Get(w http.ResponseWriter, r *http.Request) {
 	// http.ServeFile(w, r, "template.html")
 	tmpl, err := template.ParseFiles("template.html")
 	if err != nil {
-		http.Error(w, "404 - Not Found", 404)
+		http.Error(w, "404 - Not Found (Could not find template)", 404)
 		return
 	}
 	data := Data{}
@@ -83,21 +86,28 @@ func Post(w http.ResponseWriter, r *http.Request) {
 	data := Data{}
 	data.Text = r.Form["text"][0]
 	data.Banner = r.Form["banner"][0]
-	if len(data.Text) == 0 || len(data.Banner) == 0 {
-		http.Error(w, "400 - Bad Request", http.StatusBadRequest)
+	switch {
+	case len(data.Text) == 0 || len(data.Banner) == 0:
+		http.Error(w, "400 - Bad Request (It's not allowed to keep empty inputs)", 400)
+		return
+	case len(data.Text) > 500:
+		http.Error(w, "400 - Bad Request (length of the text is above 500 char.)", 400)
 		return
 	}
 
 	asciiArt, errs := AsciiArtMaker(data.Text, data.Banner)
 	tmpl, err := template.ParseFiles("template.html")
-	errs = append(errs, err)
+	if err != nil {
+		http.Error(w, "404 - Not Found (Could not find template)", 404)
+	}
 
-	// Handing template err and AsciiConverter errs
+	// Handing template err and AsciiConverter errs	
 	for i := range errs {
 		if errs[i] != nil {
-			notFound := fmt.Errorf("NotFound")
-			if errs[i] == notFound {
-				http.Error(w, "404 - Not Found", 404)
+			if errs[i] == "NotFound" {
+				http.Error(w, "404 - Not Found (Could not find banner)", 404)
+			} else if errs[i] == "Non-Ascii" {
+				http.Error(w, "400 - Bad Request (A none ascii char has been found)", 400)
 			} else {
 				http.Error(w, "500 - Internal Server Error", 500)
 			}

@@ -1,16 +1,17 @@
 package myfunctions
 
 import (
-	"os"
 	"log"
+	"os"
 )
 
 func Read(fileName string) ([]byte, error) {
 	
 	//Open File.
     file, err := os.Open(fileName)
+
 	if err != nil {
-		log.Println("error opening file :", fileName)
+		log.Println(err)
 		return []byte{}, err
 	}
 

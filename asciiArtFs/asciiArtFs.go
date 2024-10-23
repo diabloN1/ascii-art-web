@@ -2,22 +2,27 @@ package asciiArtFs
 
 import (
 	"asciiArtWeb/asciiArtFs/myFunctions"
-	"fmt"
 	"log"
+	"strings"
 )
 
-func AsciiArtFs(text string, banner string) (string, error) {
+func AsciiArtFs(text string, banner string) (string, any) {
 	banner = "asciiArtFs/" + banner + ".txt"
 	standard, err := myfunctions.Read(banner)
 	if err != nil {
-		return "NotFound", fmt.Errorf("")
+		switch {
+		case strings.HasSuffix(err.Error(), "no such file or directory"):
+			return "", "NotFound"
+		default :
+			return "", ""
+		}
 	}
 	asciiChars := myfunctions.BytesToAsciiMap(standard)
 	result, err := myfunctions.WriteResult(text, asciiChars)
 	if err != nil {
 		log.Println(err)
-		return "", fmt.Errorf("")
-	}
+		return "", "Non-Ascii"
+	}	
 	res := String(result)
 	return res, nil
 }

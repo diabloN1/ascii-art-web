@@ -14,7 +14,7 @@
     <center>
         <h1>Ascii Art</h1>
         <form action="/ascii-art" method="post">
-            <textarea name="text" placeholder="Enter text" required>{{.Text}}</textarea>
+            <textarea name="text" placeholder="Enter text" maxlength="500" required>{{.Text}}</textarea>
             <br/>
             <select name="banner" class="border">
                 <option value="all" {{if eq .Banner "all"}}selected{{end}}>All</option>
