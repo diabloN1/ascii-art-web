@@ -7,7 +7,7 @@ import (
 )
 
 func AsciiArtFs(text string, banner string) (string, any) {
-	banner = "asciiArtFs/" + banner + ".txt"
+	banner = "asciiArtFs/banners/" + banner + ".txt"
 	standard, err := myfunctions.Read(banner)
 	if err != nil {
 		switch {
@@ -23,35 +23,6 @@ func AsciiArtFs(text string, banner string) (string, any) {
 		log.Println(err)
 		return "", "Non-Ascii"
 	}	
-	res := String(result)
+	res := myfunctions.String(result)
 	return res, nil
-}
-
-func String(result []string) string {
-	str := ""
-	for _, v := range result {
-		v = replaceSpaces(v)
-		str += v + "<br>"
-	}
-	return str
-}
-
-func replaceSpaces(str string) string {
-	res := ""
-	for i := range str {
-		if OnlySpaces(str[i:]) {
-			break
-		}
-		res += string(str[i])
-	}
-	return res
-}
-
-func OnlySpaces(str string) bool {
-	for _, v := range str {
-		if v != ' ' {
-			return false
-		}
-	}
-	return true
 }
